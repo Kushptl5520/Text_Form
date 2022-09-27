@@ -51,18 +51,21 @@ class _HomePageState extends State<HomePage> {
             Wrap(
               children: availableHobbies.map((hobby) {
                 if (hobby["isDone"] == true) {
-                  return  Chip(
-                          onDeleted: () {
-                            setState(() {
-                              for (int i = 0 ; i < availableHobbies.length ; i++){
-                                if(availableHobbies[i]["name"] == hobby['name']){
-                                  availableHobbies[i]["isDone"] = false;
-                                  break;
+                  return  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 5),
+                    child: Chip(
+                            onDeleted: () {
+                              setState(() {
+                                for (int i = 0 ; i < availableHobbies.length ; i++){
+                                  if(availableHobbies[i]["name"] == hobby['name']){
+                                    availableHobbies[i]["isDone"] = false;
+                                    break;
+                                  }
                                 }
-                              }
-                            });
-                          },
-                          label: Text(hobby["name"]));
+                              });
+                            },
+                            label: Text(hobby["name"])),
+                  );
                 }
                 return Container();
               }).toList(),
