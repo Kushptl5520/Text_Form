@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:snippet_coder_utils/FormHelper.dart';
-import 'package:text_form_ui/checkbox.dart';
 import 'package:text_form_ui/routes/routes.dart';
-
-import 'addhobby.dart';
 
 class Form1 extends StatefulWidget {
   const Form1({super.key});
@@ -125,6 +122,17 @@ class _Form1State extends State<Form1> {
     ];
   }
 
+  void addHobby(String hobby) {
+    setState(() {
+      availableHobbies.add({
+        "id": DateTime.now().microsecondsSinceEpoch,
+        "isDone": false,
+        "name": hobby
+      });
+    });
+    textfieldcontroller.clear();
+  }
+
   String value = "";
   int _radioSelected = 0;
   String? gender;
@@ -136,9 +144,10 @@ class _Form1State extends State<Form1> {
   String? selectedSalutation;
   String? selectedSaluted;
   String? selectedSaluteded;
-
+  final textfieldcontroller = TextEditingController();
   final _dropkey = GlobalKey<FormState>();
   final _formkey = GlobalKey<FormState>();
+
   moveToHome(BuildContext context) {
     if (_formkey.currentState!.validate())
       Navigator.pushNamed(context, MyRoutes.homeRoute);
@@ -147,6 +156,16 @@ class _Form1State extends State<Form1> {
     _dropkey.currentState!.save();
   }
 
+  List availableHobbies = [
+    {"id": 1, "name": "Cricket", "isDone": false},
+    {"id": 2, "name": "Football", "isDone": false},
+    {
+      "id": 3,
+      "name": "Volleyball",
+      "isDone": false,
+    },
+    {"id": 4, "name": "Music", "isDone": false},
+  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -562,22 +581,40 @@ class _Form1State extends State<Form1> {
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children:  [
+                children: [
                   Padding(
                     padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("Hobbies",
-                        style: TextStyle(
-                            fontSize: 24, fontWeight: FontWeight.bold),
+                    child: Text(
+                      "Hobbies",
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                     ),
-
                   ),
                   Align(
                     child: Padding(
-                      padding:  EdgeInsets.symmetric(horizontal: 10),
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
                       child: FloatingActionButton(
-                        onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) =>  Addtohobby()),
+                        autofocus: true,
+                        onPressed: () {
+                          showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                    title: Text('Add Hobby'),
+                                    content: TextField(
+                                      controller: textfieldcontroller,
+                                      decoration: InputDecoration(
+                                          hintText: 'Enter your hobby name'),
+                                    ),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () {
+                                          Navigator.of(context).pop;
+                                            addHobby(textfieldcontroller.text);
+                                          },
+                                          child: Text('Submit'))
+                                    ],
+                                  ));
+                        },
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -586,31 +623,47 @@ class _Form1State extends State<Form1> {
                       ),
                     ),
                   )
-
-                ],
-
-
-              ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.end,
-              //   children: [
-              //     ElevatedButton(
-              //       child: Text("+",style: TextStyle(fontSize: 40),
-              //       ),
-              //       onPressed: (){},
-              //     ),
-              //   ],
-              // ),
-
-              Row(
-                children: const [
-                  SizedBox(
-                    width: 350,
-                    height: 400,
-                    child: HomePage(),
-                  )
                 ],
               ),
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                Column(
+                    children: availableHobbies.map((hobby) {
+                      return CheckboxListTile(
+                          activeColor: Colors.indigo,
+                          value: hobby["isDone"],
+                          title: Text(hobby["name"]),
+                          onChanged: (newValue) {
+                            setState(() {
+                              hobby["isDone"] = newValue;
+                            });
+                          });
+                    }).toList()),
+                const SizedBox(height: 10),
+                const Divider(),
+                const SizedBox(height: 10),
+                Wrap(
+                  children: availableHobbies.map((hobby) {
+                    if (hobby["isDone"] == true) {
+                      return  Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 5),
+                        child: Chip(
+                            onDeleted: () {
+                              setState(() {
+                                for (int i = 0 ; i < availableHobbies.length ; i++){
+                                  if(availableHobbies[i]["name"] == hobby['name']){
+                                    availableHobbies[i]["isDone"] = false;
+                                    break;
+                                  }
+                                }
+                              });
+                            },
+                            label: Text(hobby["name"])),
+                      );
+                    }
+                    return Container();
+                  }).toList(),
+                )
+              ]),
               Container(
                 height: 2,
               ),
@@ -618,6 +671,7 @@ class _Form1State extends State<Form1> {
                 height: 10.0,
               ),
               ElevatedButton(
+                autofocus: true,
                 onPressed: () => moveToHome(context),
                 child: const Text(
                   "Submit",
