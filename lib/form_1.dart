@@ -11,6 +11,9 @@ class Form1 extends StatefulWidget {
 }
 
 class _Form1State extends State<Form1> {
+  TextEditingController _name = new TextEditingController();
+  TextEditingController _lastname = new TextEditingController();
+  TextEditingController _email = new TextEditingController();
   List<dynamic> countries = [];
   List<dynamic> statesMaster = [];
   List<dynamic> states = [];
@@ -122,50 +125,19 @@ class _Form1State extends State<Form1> {
     ];
   }
 
-  void addHobby(String hobby) {
-    setState(() {
-      availableHobbies.add({
-        "id": DateTime.now().microsecondsSinceEpoch,
-        "isDone": false,
-        "name": hobby
-      });
-    });
-    textfieldcontroller.clear();
-  }
-
-  String value = "";
-  int _radioSelected = 0;
-  String? gender;
-  bool _isGujarati = false;
-  bool _isHindi = false;
-  bool _isEnglish = false;
-  bool _isTamil = false;
-
-  String? selectedSalutation;
-  String? selectedSaluted;
-  String? selectedSaluteded;
-  final textfieldcontroller = TextEditingController();
   final _dropkey = GlobalKey<FormState>();
   final _formkey = GlobalKey<FormState>();
 
   moveToHome(BuildContext context) {
+    // Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => Details(name: _name.text,lastname: _lastname.text, email: _email.text,)));
     if (_formkey.currentState!.validate())
-      Navigator.pushNamed(context, MyRoutes.homeRoute);
+      Navigator.pushNamed(context, MyRoutes.form2Route);
     if (_dropkey.currentState!.validate()) ;
     _formkey.currentState!.save();
     _dropkey.currentState!.save();
   }
 
-  List availableHobbies = [
-    {"id": 1, "name": "Cricket", "isDone": false},
-    {"id": 2, "name": "Football", "isDone": false},
-    {
-      "id": 3,
-      "name": "Volleyball",
-      "isDone": false,
-    },
-    {"id": 4, "name": "Music", "isDone": false},
-  ];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,6 +162,7 @@ class _Form1State extends State<Form1> {
                   children: [
                     Expanded(
                       child: TextFormField(
+                        controller: _name,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                             hintText: "First Name",
@@ -209,6 +182,7 @@ class _Form1State extends State<Form1> {
                     ),
                     Expanded(
                       child: TextFormField(
+                        controller: _lastname,
                         textInputAction: TextInputAction.next,
                         decoration: InputDecoration(
                             hintText: "Last Name",
@@ -231,6 +205,7 @@ class _Form1State extends State<Form1> {
                 child: Column(
                   children: [
                     TextFormField(
+                      controller: _email,
                       textInputAction: TextInputAction.next,
                       keyboardType: TextInputType.emailAddress,
                       decoration: InputDecoration(
@@ -292,6 +267,10 @@ class _Form1State extends State<Form1> {
               Column(
                 children: [
                   FormHelper.dropDownWidget(
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    contentPadding: 19,
+                    hintFontSize: 16,
                     context,
                     "Selected Country",
                     this.countryId,
@@ -322,6 +301,10 @@ class _Form1State extends State<Form1> {
 
                   const SizedBox(height: 10),
                   FormHelper.dropDownWidget(
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    contentPadding: 19,
+                    hintFontSize: 16,
                     context,
                     "Selected state",
                     this.stateId,
@@ -354,6 +337,10 @@ class _Form1State extends State<Form1> {
                   //city
 
                   FormHelper.dropDownWidget(
+                    paddingLeft: 10,
+                    paddingRight: 10,
+                    contentPadding: 19,
+                    hintFontSize: 16,
                     context,
                     "Selected city",
                     this.cityId,
@@ -365,7 +352,7 @@ class _Form1State extends State<Form1> {
                     },
                     (onValidate) {
                       if (onValidate == null) {
-                        return "please select state";
+                        return "please select city";
                       }
                       return null;
                     },
@@ -377,293 +364,9 @@ class _Form1State extends State<Form1> {
                   ),
                 ],
               ),
-
               const SizedBox(
                 height: 15,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "Gender",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 80,
-                    child: Row(
-                      children: [
-                        Radio(
-                            activeColor: Colors.indigo,
-                            value: 1,
-                            groupValue: _radioSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _radioSelected = value as int;
-                                gender = 'Male';
-                              });
-                            }),
-                        const Text('Male')
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 110,
-                    child: Row(
-                      children: [
-                        Radio(
-                            activeColor: Colors.indigo,
-                            value: 2,
-                            groupValue: _radioSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _radioSelected = value as int;
-                                gender = 'Female';
-                              });
-                            }),
-                        const Text('Female')
-                      ],
-                    ),
-                  ),
-                  Container(
-                    child: Row(
-                      children: [
-                        Radio(
-                            activeColor: Colors.indigo,
-                            value: 3,
-                            groupValue: _radioSelected,
-                            onChanged: (value) {
-                              setState(() {
-                                _radioSelected = value as int;
-                                gender = 'others';
-                              });
-                            }),
-                        const Text('Others')
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 5,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "Language Known",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  )
-                ],
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            activeColor: Colors.indigo,
-                            value: _isGujarati,
-                            onChanged: (value) {
-                              setState(() {
-                                _isGujarati = value!;
-                              });
-                            },
-                          ),
-                          const Expanded(
-                            child: Text(
-                              'Gujarati',
-                              style: TextStyle(
-                                fontSize: 17,
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 27),
-                      child: Row(
-                        children: [
-                          Checkbox(
-                            activeColor: Colors.indigo,
-                            value: _isEnglish,
-                            onChanged: (value) {
-                              setState(() {
-                                _isEnglish = value!;
-                              });
-                            },
-                          ),
-                          const Expanded(
-                              child: Text(
-                            'English',
-                            style: TextStyle(fontSize: 17),
-                          ))
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 5),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                activeColor: Colors.indigo,
-                                value: _isHindi,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isHindi = value!;
-                                  });
-                                },
-                              ),
-                              const Expanded(
-                                child: Text('Hindi',
-                                    style: TextStyle(fontSize: 17)),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 27),
-                          child: Row(
-                            children: [
-                              Checkbox(
-                                activeColor: Colors.indigo,
-                                value: _isTamil,
-                                onChanged: (value) {
-                                  setState(() {
-                                    _isTamil = value!;
-                                  });
-                                },
-                              ),
-                              const Expanded(
-                                child: Text('Tamil',
-                                    style: TextStyle(
-                                      fontSize: 17,
-                                    )),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text(
-                      "Hobbies",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                  ),
-                  Align(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: FloatingActionButton(
-                        autofocus: true,
-                        onPressed: () {
-                          showDialog(
-                              context: context,
-                              builder: (context) => AlertDialog(
-                                    title: Text('Add Hobby'),
-                                    content: TextField(
-                                      controller: textfieldcontroller,
-                                      decoration: InputDecoration(
-                                          hintText: 'Enter your hobby name'),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                          Navigator.of(context).pop;
-                                            addHobby(textfieldcontroller.text);
-                                          },
-                                          child: Text('Submit'))
-                                    ],
-                                  ));
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        backgroundColor: Colors.black,
-                        child: const Icon(Icons.add),
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                Column(
-                    children: availableHobbies.map((hobby) {
-                      return CheckboxListTile(
-                          activeColor: Colors.indigo,
-                          value: hobby["isDone"],
-                          title: Text(hobby["name"]),
-                          onChanged: (newValue) {
-                            setState(() {
-                              hobby["isDone"] = newValue;
-                            });
-                          });
-                    }).toList()),
-                const SizedBox(height: 10),
-                const Divider(),
-                const SizedBox(height: 10),
-                Wrap(
-                  children: availableHobbies.map((hobby) {
-                    if (hobby["isDone"] == true) {
-                      return  Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 5),
-                        child: Chip(
-                            onDeleted: () {
-                              setState(() {
-                                for (int i = 0 ; i < availableHobbies.length ; i++){
-                                  if(availableHobbies[i]["name"] == hobby['name']){
-                                    availableHobbies[i]["isDone"] = false;
-                                    break;
-                                  }
-                                }
-                              });
-                            },
-                            label: Text(hobby["name"])),
-                      );
-                    }
-                    return Container();
-                  }).toList(),
-                )
-              ]),
               Container(
                 height: 2,
               ),
@@ -674,7 +377,7 @@ class _Form1State extends State<Form1> {
                 autofocus: true,
                 onPressed: () => moveToHome(context),
                 child: const Text(
-                  "Submit",
+                  "Next",
                   style: TextStyle(
                     fontSize: 24,
                     color: Colors.white,
@@ -686,25 +389,6 @@ class _Form1State extends State<Form1> {
                       EdgeInsets.symmetric(horizontal: 100)),
                 ),
               ),
-              // RaisedButton(onPressed: (){
-              //   showDialog(
-              //     context: context,
-              //     builder: (ctx) => AlertDialog(
-              //       title: Text("Please Fill "),
-              //       content: Text("You have raised a alert dialog box"),
-              //       actions: [
-              //         FlatButton(onPressed: (){
-              //           Navigator.of(ctx).pop();
-              //         },
-              //         child: Text("Ok"),
-              //         ),
-              //       ],
-              //     ),
-              //
-              //   );
-              // },
-              //   child: Text("Submit"),
-              // ),
               SizedBox(
                 height: 10.0,
               ),

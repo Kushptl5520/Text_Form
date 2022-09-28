@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:text_form_ui/form_1.dart';
 import 'package:text_form_ui/routes/routes.dart';
-
+import 'form_2.dart';
 import 'home_page.dart';
 
 void main(List<String> args) {
@@ -21,6 +21,8 @@ class MyApp extends StatelessWidget {
         "/": (context) => const Form1(),
         MyRoutes.formRoute: (context) => const Form1(),
         MyRoutes.homeRoute: (context) => const HomePage(),
+        MyRoutes.form2Route: (context) => const Form2(),
+
       },
     );
   }
